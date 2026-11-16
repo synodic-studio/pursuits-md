@@ -26,7 +26,7 @@ pursuits/
 1. Read the current file and its links after sync, including the latest Notes and Change Log. Keep the ticket ID and preserve edits that arrived after the work was planned.
 2. Pilot one change before a batch. Obsidian's desktop CLI can rename or move files with automatic internal link updates enabled. Check the new filename and the reciprocal `parent` and `children` properties, `related` links, and inbound links in note bodies. Repair any references that still use the old path. [Obsidian CLI](https://obsidian.md/help/cli)
 3. If sync recreates the old file with the same ID, stop the batch and compare both copies. Preserve human edits from both files, including any newer Notes text, in the surviving ticket. Resolve any uncertainty about conflicting text before removing the duplicate.
-4. Regenerate the diagrams and their relative Markdown links. Run `check` and follow a link below the diagram to the moved ticket.
+4. Regenerate the diagrams and their Markdown links. Run `check` and follow a link below the diagram to the moved ticket.
 
 ## Metadata
 
@@ -107,9 +107,9 @@ In the preceding diagram, use Mermaid’s double-sided box (`TABC[["Title"]]`) f
 
 Keep `flowchart LR` and put all the nodes and edges inside an unlabelled `subgraph horizontal[" "]` with `direction LR`. Hide the group border and fill with `style horizontal fill:none,stroke:none,stroke-width:0px;`. This preserves the left-to-right layout when Pele auto-adjusts for narrow screens. [Pele narrow-screen behavior](https://github.com/obsidianmd/pele/blob/main/website/src/content/docs/api.md#narrow-screens)
 
-Use `<br/>` for the line break and `<code>` for the ID. Add a Mermaid click target for each destination ticket. The local vault render uses Obsidian's vault-local note URLs. The GitHub render uses root-relative repository file URLs based on the publication's repository, ref, and vault location. Both renders derive targets from the ticket files, so regeneration picks up renames and moves.
+Use `<br/>` for the line break and `<code>` for the ID. Add a Mermaid click target for each destination ticket. The local vault render uses Obsidian's vault-local note URLs. The GitHub render uses full HTTPS URLs for the publication's repository, branch or tag, and vault location. A PR preview uses its review branch for the entire navigation path. Both renders derive targets from the ticket files, so regeneration picks up renames and moves.
 
-Below each diagram, provide one relative Markdown link per displayed destination in diagram order. Include the `.md` extension and resolve these paths from the note containing the diagram.
+Below each diagram, provide one Markdown link per displayed destination in diagram order. In a local vault, use paths relative to the note containing the diagram and include the `.md` extension. On GitHub, use the same full file URLs as the chart.
 
 ## Agent operations and continuity
 

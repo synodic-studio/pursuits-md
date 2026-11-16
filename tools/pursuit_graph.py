@@ -12,7 +12,7 @@ from os.path import relpath
 from pathlib import Path
 import re
 from tempfile import NamedTemporaryFile
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit, urlunsplit
 
 import yaml
 
@@ -154,23 +154,28 @@ def build_diagram(
         lines.append(f"        T{ticket.id}[{label}]")
     lines.extend(f"        T{parent} --> T{child}" for parent, child in edges)
     lines.extend(["    end", "    style horizontal fill:none,stroke:none,stroke-width:0px;"])
-    destinations = [ticket for ticket in nodes if ticket.id != owner]
-    for ticket in destinations:
+    ticket_links = []
+    for ticket in nodes:
+        if ticket.id == owner:
+            continue
         if github_base is None:
             target = f"obsidian://open?file={quote(ticket.target, safe='')}"
+            relative_path = Path(relpath(ticket.path, source.parent)).as_posix()
+            markdown_target = quote(relative_path)
         else:
             target = f"{github_base}/{quote(ticket.path.as_posix())}"
+            markdown_target = target
         lines.append(f'    click T{ticket.id} "{target}"')
+        title = re.sub(r"([\\\[\]`*_])", r"\\\1", escape(ticket.title, quote=False))
+        ticket_links.append((title, markdown_target))
     for status, (_, color) in PALETTE.items():
         members = [f"T{ticket.id}" for ticket in nodes if ticket.status == status]
         if members:
             lines.append(f"    classDef {status}Ticket stroke:{color},stroke-width:2px;")
             lines.append(f"    class {','.join(members)} {status}Ticket;")
     lines.extend(["```", "", DIAGRAM_LINKS_START, ""])
-    for number, ticket in enumerate(destinations, 1):
-        title = re.sub(r"([\\\[\]`*_])", r"\\\1", escape(ticket.title, quote=False))
-        relative_path = Path(relpath(ticket.path, source.parent)).as_posix()
-        lines.append(f"{number}. [{title}]({quote(relative_path)})")
+    for number, (title, target) in enumerate(ticket_links, 1):
+        lines.append(f"{number}. [{title}]({target})")
     lines.extend(["", DIAGRAM_LINKS_END, ""])
     return "\n".join(lines)
 
@@ -207,6 +212,20 @@ def render_plan(
     return {path: pair for path, pair in planned.items() if pair[0] != pair[1]}
 
 
+def parse_github_base(value: str) -> str:
+    if value.startswith("/") and not value.startswith("//"):
+        value = f"https://github.com{value}"
+    try:
+        url = urlsplit(value)
+        if url.scheme == "https" and url.hostname and not (
+            url.username or url.password or url.query or url.fragment
+        ) and url.path.strip("/"):
+            return urlunsplit(("https", url.netloc, quote(url.path.rstrip("/"), safe="/%"), "", ""))
+    except ValueError:
+        pass
+    raise argparse.ArgumentTypeError("expected a full GitHub HTTPS URL for the vault")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=("check", "render"))
@@ -217,18 +236,13 @@ def main() -> None:
                         help="start a continuation diagram at a ticket")
     parser.add_argument("--max-columns", type=int, default=5,
                         help="maximum diagram columns for the current tree (default 5)")
-    parser.add_argument("--github-base", metavar="/OWNER/REPO/blob/REF/VAULT",
-                        help="root-relative path to the vault on GitHub (default: local vault links)")
+    parser.add_argument("--github-base", type=parse_github_base, metavar="URL",
+                        help="full GitHub URL to the vault at a specific ref (default: local vault links)")
     args = parser.parse_args()
     if args.max_columns < 1:
         parser.error("--max-columns must be positive")
     if args.pursuits_dir.is_absolute() or ".." in args.pursuits_dir.parts:
         parser.error("--pursuits-dir must be a relative path within the vault")
-    github_base = None
-    if args.github_base is not None:
-        if not re.fullmatch(r"/(?!/)[^?#]+", args.github_base):
-            parser.error("--github-base must be a root-relative GitHub path")
-        github_base = quote(args.github_base.rstrip("/"), safe="/%")
     vault = args.vault.resolve()
     pursuit_root = (vault / args.pursuits_dir).resolve()
     if not pursuit_root.is_relative_to(vault):
@@ -238,7 +252,7 @@ def main() -> None:
         continuations = {id for id, ticket in tickets.items() if DIAGRAM.search(ticket.text)}
         updates = render_plan(
             vault, pursuit_root / "README.md", tickets,
-            continuations | set(args.continuation), args.max_columns, github_base,
+            continuations | set(args.continuation), args.max_columns, args.github_base,
         )
         if args.command == "check" and updates:
             raise ValueError("Outdated diagrams\n" + "\n".join(str(path) for path in updates))
