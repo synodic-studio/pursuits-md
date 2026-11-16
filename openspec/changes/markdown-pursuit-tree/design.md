@@ -54,7 +54,9 @@ Statuses: `open` (gray), `defining` (yellow), `working` (green), `done` (blue). 
 
 Executors: `human`, `agent`, `unassigned`. A ready actionable leaf has exactly one executor, one coherent independently verifiable outcome, sufficient context, and acceptance criteria; no rigid duration, word-count or complexity threshold. Mixed human/agent work should generally be split into siblings or dependent generations. Fully decomposed parents may be unassigned. A ticket is `done` only when its own acceptance criteria and all children's completion conditions are met. Adding an unfinished child to a done ticket reopens it and affected completed ancestors; reopening a child similarly propagates. New work discovered after completion may instead be a **sibling** when it is a distinct outcome; the original ticket remains done. Both choices are valid, based on whether original completion requirements have expanded.
 
-Use concise title case for all tickets, including branch titles. Use a noun phrase when it clearly names the outcome, such as “Desk Setup”. When a draft title needs “and” to join different outcomes, split them into siblings or name the one result that the work supports.
+Use concise title case for all tickets, including branch titles. Use a noun phrase when it clearly names the outcome, such as “Desk Setup”. Familiar abbreviations are fine when the title stays clear in the tree. When a draft title needs “and” to join different outcomes, split them into siblings or name the one result that the work supports. Repeatable work can warrant one child per instance when each has its own evidence or decision.
+
+Keep constraints that affect several children on the parent and the details on the ticket that owns each outcome. When a parent's scope broadens, keep completed child outcomes that still contribute. Put remaining required checks in acceptance criteria. If a check serves a separate outcome, give it a place in that ticket and link it from the relevant context.
 
 ## Document layout
 
@@ -93,7 +95,7 @@ Give independently referenceable checks, options, and supplies their own lines. 
 
 ## Human Notes inbox and Change Log
 
-Notes are human-only capture for typing/dictation. Agents detect unprocessed numbered notes (trigger mechanism deferred), interpret and apply clear feedback to main matter or tickets, and record each processed note's original number, interpretation and resulting changes in a `Change Log` section directly beneath Notes. When initializing a ticket or clearing the last processed note, leave `1.` followed by exactly one space. The trailing space is intentional so the user can start typing immediately. Keep ambiguous/unresolved notes intact and ask for clarification. Git history may supplement the in-ticket log. Preserve the original meaning; never silently discard notes.
+Notes are human-only capture for typing or dictation. Reread the latest Notes on disk when the user asks for a refresh. Apply clear feedback to the ticket or tree and describe the feedback and resulting changes in a `Change Log` section directly beneath Notes. Each entry should make sense after the note is cleared. Link affected tickets or artifacts when they help explain the change. When initializing a ticket or clearing the last processed note, leave `1.` followed by exactly one space so the user can start typing immediately. Keep unresolved notes intact. Git history may supplement the in-ticket log.
 
 ## Diagrams
 
@@ -113,7 +115,7 @@ Refine objectives and acceptance criteria, maintain files and diagrams, research
 
 Create or identify a ticket when taking on substantial agent work. Give a separately reviewable outcome its own child ticket when it supports a larger decision or execution task. On the work ticket, record the approach, important sources or checks, what was verified, and what remains open. Present that record before linking to the result or supporting note so the user can review the work from the tree. A short record in the existing ticket is enough for small checks that serve the same outcome. Use headings and detail appropriate to the work.
 
-When detailed findings cover several subjects, use focused vault notes and link each ticket to the relevant note or heading. Keep enough evidence in the ticket to review the work without opening those links. A research ticket can reach Done while the decision it informs stays open.
+When detailed findings cover several subjects, use focused vault notes and link each ticket to the relevant note or heading. When splitting a linked note, repair incoming references or keep its existing headings as an index to the new notes. Keep enough evidence in the ticket to review the work from the tree, including the cases that were checked. If acceptance depends on using an artifact in a particular app or on a particular device, record evidence from that destination. A research ticket can reach Done while the decision it informs stays open.
 
 ## Git and review
 

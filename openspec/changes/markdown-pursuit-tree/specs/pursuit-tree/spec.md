@@ -78,6 +78,10 @@ A ticket SHALL be `done` only when its own criteria and all children are complet
 - **WHEN** new work is a distinct outcome after a sibling's completion
 - **THEN** a new sibling MAY be created without reopening the completed ticket.
 
+#### Scenario: A required check is still open
+- **WHEN** a remaining check is required to accept the ticket's outcome
+- **THEN** the check is captured in acceptance criteria and the ticket stays unfinished until the check is resolved.
+
 ### Requirement: Human Notes inbox
 Every ticket SHALL include a Notes section with native numbered-list input, initialized with `1.` followed by one ASCII space. Agents SHALL NOT add their own working notes there; agents SHALL write substantive content to flexible main-matter sections.
 
@@ -86,7 +90,7 @@ Every ticket SHALL include a Notes section with native numbered-list input, init
 - **THEN** an empty numbered Notes item is available for input.
 
 ### Requirement: Traceable notes processing
-When agents process Notes, they SHALL record each processed note's original number, interpretation, and resulting edits in the ticket's Change Log and clear only successfully processed notes. Unresolved notes SHALL remain. When no notes remain, agents SHALL leave `1.` followed by one ASCII space.
+When agents process Notes, they SHALL record the substance of the feedback and the resulting edits in the ticket's Change Log and clear only successfully processed notes. Change Log entries SHALL remain understandable after the notes are cleared. Unresolved notes SHALL remain. When no notes remain, agents SHALL leave `1.` followed by one ASCII space.
 
 #### Scenario: Ambiguous note
 - **WHEN** an agent cannot confidently interpret a note
