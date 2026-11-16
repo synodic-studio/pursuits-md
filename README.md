@@ -6,14 +6,16 @@ The [v0.1 trial notes](docs/v0.1-trial.md) explain the ticket, review, and navig
 
 ## Try the example
 
-From this directory, run the helper with [uv](https://docs.astral.sh/uv/). It uses Python 3.11 or newer and PyYAML.
+Open the [example overview](examples/demo-vault/pursuits/README.md) on GitHub and click a ticket in the chart. A double-sided box identifies a ticket with a continuation. The Markdown links below each diagram also open the tickets.
+
+To verify the published example from a checkout, run the helper with [uv](https://docs.astral.sh/uv/). It uses Python 3.11 or newer and PyYAML.
 
 ```sh
-uv run tools/pursuit_graph.py --vault examples/demo-vault check
-uv run tools/pursuit_graph.py --vault examples/demo-vault render
+uv run tools/pursuit_graph.py check --vault examples/demo-vault \
+  --github-base /synodic-studio/pursuits-md/blob/HEAD/examples/demo-vault
 ```
 
-Start with the [example overview](examples/demo-vault/pursuits/README.md) on GitHub or open `examples/demo-vault` in Obsidian. A double-sided box identifies a ticket with a continuation diagram. Follow the relative Markdown links under each chart to open the tickets.
+To try the same tree locally in Obsidian, run `uv run tools/pursuit_graph.py render --vault examples/demo-vault` and open that folder as a vault. The helper generates vault-local diagram destinations by default.
 
 ## Use your own vault
 
@@ -29,6 +31,8 @@ Start with the [example overview](examples/demo-vault/pursuits/README.md) on Git
    ~~~
 
 4. Run `render` to update the diagrams and ticket links. Run `check` to validate the tree and catch stale diagrams or links. Use `render --continuation ID` to start a new continuation on a ticket with children. Subsequent runs recognize its marked block.
+
+When publishing to GitHub, pass `--github-base /OWNER/REPO/blob/REF/PATH/TO/VAULT` to both commands. The built-in GitHub diagram viewer resolves clicks from the site root. The published example uses `HEAD` to follow this repository's default branch. Use a specific branch or tag for a publication tied to that ref.
 
 The helper checks filenames, IDs, parent and child links, folder placement, cycles, status, executor, and completion consistency. It updates diagrams. Edit ticket content, properties, and file placement directly in your vault.
 

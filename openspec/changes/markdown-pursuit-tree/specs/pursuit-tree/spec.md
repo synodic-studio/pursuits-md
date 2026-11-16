@@ -32,12 +32,12 @@ Tickets MAY reference other tickets as `related` wikilinks. The system SHALL exc
 - **THEN** the single-parent tree and diagram structure remain unchanged.
 
 ### Requirement: Visual navigation
-Every ticket SHALL appear in a Mermaid diagram, ordinarily exactly once. A transition ticket SHALL appear exactly twice, at the right edge of its preceding diagram and as the root of its continuation in its own document. Each diagram SHALL have relative Markdown links to its displayed destination tickets directly below the chart.
+Every ticket SHALL appear in a Mermaid diagram, ordinarily exactly once. A transition ticket SHALL appear exactly twice, at the right edge of its preceding diagram and as the root of its continuation in its own document. Each destination ticket SHALL be clickable using a target for the viewer that will display the diagram. The diagram SHALL also have relative Markdown links to its displayed destination tickets directly below the chart.
 
 #### Scenario: Follow a diagram handoff
 - **WHEN** a user views a diagram with a boundary ticket
 - **THEN** the boundary ticket has a double-sided outline
-- **AND** following the ticket link below the diagram opens its document with the continuation diagram after frontmatter.
+- **AND** clicking the boundary ticket opens its document with the continuation diagram after frontmatter.
 
 ### Requirement: Bounded horizontal depth
 Diagrams SHALL use left-to-right layout, normally 3–5 generations, with five as default maximum unless an explicit space-based exception is justified. There SHALL be no sibling or total-tree depth limit.

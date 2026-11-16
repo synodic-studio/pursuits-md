@@ -14,6 +14,9 @@ flowchart LR
         TDSK --> TMAT
     end
     style horizontal fill:none,stroke:none,stroke-width:0px;
+    click TDSK "/synodic-studio/pursuits-md/blob/HEAD/examples/demo-vault/pursuits/DSK%20-%20Desk%20Setup.md"
+    click TNV7 "/synodic-studio/pursuits-md/blob/HEAD/examples/demo-vault/pursuits/DSK/NV7%20-%20Equipment%20Inventory.md"
+    click TMAT "/synodic-studio/pursuits-md/blob/HEAD/examples/demo-vault/pursuits/DSK/MAT%20-%20Desk%20Mat.md"
     classDef openTicket stroke:#818994,stroke-width:2px;
     class TMAT openTicket;
     classDef workingTicket stroke:#389364,stroke-width:2px;

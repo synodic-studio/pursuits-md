@@ -17,6 +17,7 @@ flowchart LR
         TMAT --> TF1T
     end
     style horizontal fill:none,stroke:none,stroke-width:0px;
+    click TF1T "/synodic-studio/pursuits-md/blob/HEAD/examples/demo-vault/pursuits/DSK/MAT/F1T%20-%20Mat%20Fit%20Check.md"
     classDef openTicket stroke:#818994,stroke-width:2px;
     class TMAT openTicket;
     classDef workingTicket stroke:#389364,stroke-width:2px;

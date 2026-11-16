@@ -107,7 +107,9 @@ In the preceding diagram, use Mermaid’s double-sided box (`TABC[["Title"]]`) f
 
 Keep `flowchart LR` and put all the nodes and edges inside an unlabelled `subgraph horizontal[" "]` with `direction LR`. Hide the group border and fill with `style horizontal fill:none,stroke:none,stroke-width:0px;`. This preserves the left-to-right layout when Pele auto-adjusts for narrow screens. [Pele narrow-screen behavior](https://github.com/obsidianmd/pele/blob/main/website/src/content/docs/api.md#narrow-screens)
 
-Use `<br/>` for the line break and `<code>` for the ID. Below each diagram, provide one relative Markdown link per displayed destination in diagram order. Link paths include the `.md` extension and are relative to the note containing the diagram. The same Markdown links work from a repository view or an Obsidian vault.
+Use `<br/>` for the line break and `<code>` for the ID. Add a Mermaid click target for each destination ticket. The local vault render uses Obsidian's vault-local note URLs. The GitHub render uses root-relative repository file URLs based on the publication's repository, ref, and vault location. Both renders derive targets from the ticket files, so regeneration picks up renames and moves.
+
+Below each diagram, provide one relative Markdown link per displayed destination in diagram order. Include the `.md` extension and resolve these paths from the note containing the diagram.
 
 ## Agent operations and continuity
 

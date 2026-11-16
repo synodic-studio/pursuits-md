@@ -125,7 +125,7 @@ def validate_tree(tickets: dict[str, Ticket]) -> dict[str, Ticket]:
 
 def build_diagram(
     start: list[Ticket], links: dict[str, Ticket], continuations: set[str],
-    owner: str | None, max_columns: int, source: Path,
+    owner: str | None, max_columns: int, source: Path, github_base: str | None = None,
 ) -> str:
     nodes, edges = [], []
 
@@ -154,13 +154,19 @@ def build_diagram(
         lines.append(f"        T{ticket.id}[{label}]")
     lines.extend(f"        T{parent} --> T{child}" for parent, child in edges)
     lines.extend(["    end", "    style horizontal fill:none,stroke:none,stroke-width:0px;"])
+    destinations = [ticket for ticket in nodes if ticket.id != owner]
+    for ticket in destinations:
+        if github_base is None:
+            target = f"obsidian://open?file={quote(ticket.target, safe='')}"
+        else:
+            target = f"{github_base}/{quote(ticket.path.as_posix())}"
+        lines.append(f'    click T{ticket.id} "{target}"')
     for status, (_, color) in PALETTE.items():
         members = [f"T{ticket.id}" for ticket in nodes if ticket.status == status]
         if members:
             lines.append(f"    classDef {status}Ticket stroke:{color},stroke-width:2px;")
             lines.append(f"    class {','.join(members)} {status}Ticket;")
     lines.extend(["```", "", DIAGRAM_LINKS_START, ""])
-    destinations = [ticket for ticket in nodes if ticket.id != owner]
     for number, ticket in enumerate(destinations, 1):
         title = re.sub(r"([\\\[\]`*_])", r"\\\1", escape(ticket.title, quote=False))
         relative_path = Path(relpath(ticket.path, source.parent)).as_posix()
@@ -170,7 +176,8 @@ def build_diagram(
 
 
 def render_plan(
-    vault: Path, overview: Path, tickets: dict[str, Ticket], continuations: set[str], max_columns: int
+    vault: Path, overview: Path, tickets: dict[str, Ticket], continuations: set[str],
+    max_columns: int, github_base: str | None = None,
 ) -> dict[Path, tuple[str, str]]:
     links = validate_tree(tickets)
     old_overview = overview.read_text(encoding="utf-8")
@@ -180,7 +187,9 @@ def render_plan(
     order = dict.fromkeys(NODE.findall(old_diagram[0]))
     order.update(dict.fromkeys(tickets))
     roots = [tickets[id] for id in order if id in tickets and tickets[id].parent is None]
-    overview_block = build_diagram(roots, links, continuations, None, max_columns, overview.relative_to(vault))
+    overview_block = build_diagram(
+        roots, links, continuations, None, max_columns, overview.relative_to(vault), github_base
+    )
     planned = {
         overview: (old_overview, DIAGRAM.sub(
             lambda _: overview_block, old_overview, count=1
@@ -190,7 +199,7 @@ def render_plan(
         ticket = tickets.get(id)
         if ticket is None or not ticket.children:
             raise ValueError(f"Continuation {id} must have a ticket with children")
-        block = build_diagram([ticket], links, continuations, id, max_columns, ticket.path)
+        block = build_diagram([ticket], links, continuations, id, max_columns, ticket.path, github_base)
         open_fence, header, body = ticket.text.split("---\n", 2)
         body = DIAGRAM.sub("", body, count=1)
         updated = f"{open_fence}---\n{header}---\n\n{block}\n{body.lstrip(chr(10))}"
@@ -208,11 +217,18 @@ def main() -> None:
                         help="start a continuation diagram at a ticket")
     parser.add_argument("--max-columns", type=int, default=5,
                         help="maximum diagram columns for the current tree (default 5)")
+    parser.add_argument("--github-base", metavar="/OWNER/REPO/blob/REF/VAULT",
+                        help="root-relative path to the vault on GitHub (default: local vault links)")
     args = parser.parse_args()
     if args.max_columns < 1:
         parser.error("--max-columns must be positive")
     if args.pursuits_dir.is_absolute() or ".." in args.pursuits_dir.parts:
         parser.error("--pursuits-dir must be a relative path within the vault")
+    github_base = None
+    if args.github_base is not None:
+        if not re.fullmatch(r"/(?!/)[^?#]+", args.github_base):
+            parser.error("--github-base must be a root-relative GitHub path")
+        github_base = quote(args.github_base.rstrip("/"), safe="/%")
     vault = args.vault.resolve()
     pursuit_root = (vault / args.pursuits_dir).resolve()
     if not pursuit_root.is_relative_to(vault):
@@ -222,7 +238,7 @@ def main() -> None:
         continuations = {id for id, ticket in tickets.items() if DIAGRAM.search(ticket.text)}
         updates = render_plan(
             vault, pursuit_root / "README.md", tickets,
-            continuations | set(args.continuation), args.max_columns,
+            continuations | set(args.continuation), args.max_columns, github_base,
         )
         if args.command == "check" and updates:
             raise ValueError("Outdated diagrams\n" + "\n".join(str(path) for path in updates))
