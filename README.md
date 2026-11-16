@@ -1,6 +1,16 @@
-# Pursuits MD 0.1
+# Pursuits MD 0.1.1
 
 A Markdown ticket tree with reciprocal links and generated Obsidian diagrams. Each ticket holds its goal, acceptance criteria, status, and notes. A parent file sits beside the ID-named folder that holds its children.
+
+## v0.1.1
+
+This documentation patch captures how to use tickets in a synced vault.
+
+- a. Name one outcome per ticket in concise title case. Put checks, choices, and supplies on separate lines when readers need to scan or reference them.
+- b. Record what the agent checked and what remains open before linking a result. Keep detailed results in focused vault notes. A completed research ticket can support a decision ticket that stays open.
+- c. Keep the numbered Notes section ready for human follow-up. Log each processed note's number, interpretation, and resulting changes. Leave unresolved notes in place.
+- d. Show written status alongside the ID on a diagram node and use double-sided boxes for continuations. Check that arrows still point right at narrow widths. A ticket can also show its status below the title.
+- e. Pilot renames before a batch, check links to and from the renamed ticket, and regenerate diagram URLs. If sync recreates the old file, recover newer human edits before consolidating the two copies.
 
 ## Try the example
 

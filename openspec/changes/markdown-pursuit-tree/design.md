@@ -6,7 +6,7 @@ All nodes are tickets; no separate handoff type. Every ticket has one Markdown d
 
 ## Paths and references
 
-Prefer vault links for working notes and artifacts. Keep outside URLs as sources or for actions that must happen on an external service. Confirm whether linked attachments sync to the devices where they are needed.
+Prefer vault links for working notes and artifacts. Keep outside URLs as sources or for actions that must happen on an external service. If an attachment opens on one device but is missing on another, check the receiving device's selective sync settings.
 
 Files use `<ID> - <Short title>.md`; the sibling folder containing immediate child documents is named `<ID>/` only. Move descendants with their parent; rename filenames but not ID folders. Parent and children are reciprocal Obsidian `[[wikilinks]]`, updated on moves/renames. Use paths relative to the vault root. No body tables of children. Optional `related` wikilinks allow nonhierarchical connections and do not create diagram edges or additional parents.
 
@@ -20,6 +20,13 @@ pursuits/
       9PV - Define API.md
       4RT - Documentation.md
 ```
+
+### Renaming or moving a ticket
+
+1. Read the current file and its links after sync, including the latest Notes and Change Log. Keep the ticket ID and preserve edits that arrived after the work was planned.
+2. Pilot one change before a batch. Obsidian's desktop CLI can rename or move files with automatic internal link updates enabled. Check the new filename and the reciprocal `parent` and `children` properties, `related` links, and inbound links in note bodies. Repair any references that still use the old path. [Obsidian CLI](https://obsidian.md/help/cli)
+3. If sync recreates the old file with the same ID, stop the batch and compare both copies. Preserve human edits from both files, including any newer Notes text, in the surviving ticket. Resolve any uncertainty about conflicting text before removing the duplicate.
+4. Regenerate the diagrams so their explicit ticket URLs target the new path. Run `check` and follow a diagram link to the moved ticket.
 
 ## Metadata
 
@@ -53,6 +60,8 @@ Use concise title case for all tickets, including branch titles. Use a noun phra
 
 YAML frontmatter comes first. **If present, the Mermaid diagram immediately follows frontmatter**, before title and prose. The flexible main body contains at minimum Description/Context, Acceptance Criteria, and Notes; agents may add headings for research, constraints, decisions, dependencies, progress, etc. Agents write content to the main body, **never Notes**.
 
+A ticket may show its written status as a heading below the title, with Description and Acceptance Criteria as subheadings. Keep the heading in sync with the canonical YAML status. Notes and Change Log keep their own headings.
+
 ```markdown
 ---
 id: "2HF"
@@ -80,7 +89,7 @@ Brief intent and essential context.
 ## Change Log
 ```
 
-All unordered-list items, including checkboxes, use native Markdown bullets **plus unique letter labels across the entire ticket** (`a`…`z`, then `aa`, `ab`…). Labels need not be sequential after edits; preserve established references instead of renumbering. Ordered procedural lists use native numbered lists. **Notes is an exception:** use native numbered entries, automatically managed by Obsidian, with one empty numbered entry after processing. Agents should not edit human notes except as part of explicit processing. Section-scoped references may be used for clarity.
+Give independently referenceable checks, options, and supplies their own lines. Prefer flat lists and keep short phrases in prose where they read naturally. All unordered-list items, including checkboxes, use native Markdown bullets **plus unique letter labels across the entire ticket** (`a`…`z`, then `aa`, `ab`…). Preserve established labels when inserting or deleting items. Use native numbered lists for steps that must happen in sequence. Notes also use native numbers, managed by Obsidian. Section-scoped references may be used for clarity.
 
 ## Human Notes inbox and Change Log
 
@@ -103,6 +112,8 @@ Use `<br/>` for the line break and `<code>` for the ID. Add a separate Mermaid `
 Refine objectives and acceptance criteria, maintain files and diagrams, research and cite findings, review gaps, and execute authorized work. Agents perform structural edits while humans navigate, annotate, and review. Fresh sessions must be able to reconstruct the objective, current state, relationships, unresolved feedback, and remaining work from durable artifacts. Escalate consequential ambiguity and respect approval boundaries.
 
 Create or identify a ticket when taking on substantial agent work. Give a separately reviewable outcome its own child ticket when it supports a larger decision or execution task. On the work ticket, record the approach, important sources or checks, what was verified, and what remains open. Present that record before linking to the result or supporting note so the user can review the work from the tree. A short record in the existing ticket is enough for small checks that serve the same outcome. Use headings and detail appropriate to the work.
+
+When detailed findings cover several subjects, use focused vault notes and link each ticket to the relevant note or heading. Keep enough evidence in the ticket to review the work without opening those links. A research ticket can reach Done while the decision it informs stays open.
 
 ## Git and review
 
