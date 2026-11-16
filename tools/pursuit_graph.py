@@ -160,14 +160,12 @@ def build_diagram(
             continue
         if github_base is None:
             target = f"obsidian://open?file={quote(ticket.target, safe='')}"
-            relative_path = Path(relpath(ticket.path, source.parent)).as_posix()
-            markdown_target = quote(relative_path)
         else:
             target = f"{github_base}/{quote(ticket.path.as_posix())}"
-            markdown_target = target
         lines.append(f'    click T{ticket.id} "{target}"')
+        relative_path = Path(relpath(ticket.path, source.parent)).as_posix()
         title = re.sub(r"([\\\[\]`*_])", r"\\\1", escape(ticket.title, quote=False))
-        ticket_links.append((title, markdown_target))
+        ticket_links.append((title, quote(relative_path)))
     for status, (_, color) in PALETTE.items():
         members = [f"T{ticket.id}" for ticket in nodes if ticket.status == status]
         if members:

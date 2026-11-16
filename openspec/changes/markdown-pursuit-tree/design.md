@@ -109,7 +109,7 @@ Keep `flowchart LR` and put all the nodes and edges inside an unlabelled `subgra
 
 Use `<br/>` for the line break and `<code>` for the ID. Add a Mermaid click target for each destination ticket. The local vault render uses Obsidian's vault-local note URLs. The GitHub render uses full HTTPS URLs for the publication's repository, branch or tag, and vault location. A PR preview uses its review branch for the entire navigation path. Both renders derive targets from the ticket files, so regeneration picks up renames and moves.
 
-Below each diagram, provide one Markdown link per displayed destination in diagram order. In a local vault, use paths relative to the note containing the diagram and include the `.md` extension. On GitHub, use the same full file URLs as the chart.
+Below each diagram, provide one Markdown link per displayed destination in diagram order. Use paths relative to the note containing the diagram and include the `.md` extension in every render mode.
 
 ## Agent operations and continuity
 

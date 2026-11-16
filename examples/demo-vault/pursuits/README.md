@@ -2,6 +2,8 @@
 
 Set up a desk for writing and video calls.
 
+Click the chart boxes in Obsidian. On GitHub, use the Markdown links below each chart.
+
 <!-- pursuits-md:graph -->
 ```mermaid
 flowchart LR
@@ -14,9 +16,9 @@ flowchart LR
         TDSK --> TMAT
     end
     style horizontal fill:none,stroke:none,stroke-width:0px;
-    click TDSK "https://github.com/synodic-studio/pursuits-md/blob/v0.1.1-clarifications/examples/demo-vault/pursuits/DSK%20-%20Desk%20Setup.md"
-    click TNV7 "https://github.com/synodic-studio/pursuits-md/blob/v0.1.1-clarifications/examples/demo-vault/pursuits/DSK/NV7%20-%20Equipment%20Inventory.md"
-    click TMAT "https://github.com/synodic-studio/pursuits-md/blob/v0.1.1-clarifications/examples/demo-vault/pursuits/DSK/MAT%20-%20Desk%20Mat.md"
+    click TDSK "obsidian://open?file=pursuits%2FDSK%20-%20Desk%20Setup"
+    click TNV7 "obsidian://open?file=pursuits%2FDSK%2FNV7%20-%20Equipment%20Inventory"
+    click TMAT "obsidian://open?file=pursuits%2FDSK%2FMAT%20-%20Desk%20Mat"
     classDef openTicket stroke:#818994,stroke-width:2px;
     class TMAT openTicket;
     classDef workingTicket stroke:#389364,stroke-width:2px;
@@ -27,8 +29,8 @@ flowchart LR
 
 <!-- pursuits-md:graph-links -->
 
-1. [Desk Setup](https://github.com/synodic-studio/pursuits-md/blob/v0.1.1-clarifications/examples/demo-vault/pursuits/DSK%20-%20Desk%20Setup.md)
-2. [Equipment Inventory](https://github.com/synodic-studio/pursuits-md/blob/v0.1.1-clarifications/examples/demo-vault/pursuits/DSK/NV7%20-%20Equipment%20Inventory.md)
-3. [Desk Mat](https://github.com/synodic-studio/pursuits-md/blob/v0.1.1-clarifications/examples/demo-vault/pursuits/DSK/MAT%20-%20Desk%20Mat.md)
+1. [Desk Setup](DSK%20-%20Desk%20Setup.md)
+2. [Equipment Inventory](DSK/NV7%20-%20Equipment%20Inventory.md)
+3. [Desk Mat](DSK/MAT%20-%20Desk%20Mat.md)
 
 <!-- /pursuits-md:graph-links -->

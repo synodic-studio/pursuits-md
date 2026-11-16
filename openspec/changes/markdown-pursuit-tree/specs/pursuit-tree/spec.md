@@ -32,7 +32,7 @@ Tickets MAY reference other tickets as `related` wikilinks. The system SHALL exc
 - **THEN** the single-parent tree and diagram structure remain unchanged.
 
 ### Requirement: Visual navigation
-Every ticket SHALL appear in a Mermaid diagram, ordinarily exactly once. A transition ticket SHALL appear exactly twice, at the right edge of its preceding diagram and as the root of its continuation in its own document. Each destination ticket SHALL be clickable using a target for the viewer that will display the diagram. A Markdown link to each destination SHALL also appear directly below the chart. GitHub chart and Markdown links SHALL use full URLs that point to the same branch or tag throughout.
+Every ticket SHALL appear in a Mermaid diagram, ordinarily exactly once. A transition ticket SHALL appear exactly twice, at the right edge of its preceding diagram and as the root of its continuation in its own document. Each destination ticket SHALL be clickable using a target for the viewer that will display the diagram. A relative Markdown link to each destination SHALL also appear directly below the chart. When rendering charts for GitHub, node links SHALL use full URLs on the selected branch or tag.
 
 #### Scenario: Follow a diagram handoff
 - **WHEN** a user views a diagram with a boundary ticket
