@@ -248,8 +248,14 @@ def main() -> None:
     try:
         tickets = read_tickets(vault, pursuit_root)
         continuations = {id for id, ticket in tickets.items() if DIAGRAM.search(ticket.text)}
+        overview = vault / "README.md"
+        legacy_overview = pursuit_root / "README.md"
+        if legacy_overview.is_file() and (
+            not overview.is_file() or not DIAGRAM.search(overview.read_text(encoding="utf-8"))
+        ):
+            overview = legacy_overview
         updates = render_plan(
-            vault, pursuit_root / "README.md", tickets,
+            vault, overview, tickets,
             continuations | set(args.continuation), args.max_columns, args.github_base,
         )
         if args.command == "check" and updates:

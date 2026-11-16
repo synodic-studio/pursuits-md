@@ -6,7 +6,7 @@ The [v0.1 trial notes](docs/v0.1-trial.md) explain the ticket, review, and navig
 
 ## Try the example
 
-Open `examples/demo-vault` as an Obsidian vault and click a ticket in the chart. A double-sided box identifies a ticket with a continuation. When browsing the [same example](examples/demo-vault/pursuits/README.md) on GitHub, use the Markdown links below each chart.
+Open `examples/demo-vault` as an Obsidian vault and click a ticket in the chart. A double-sided box identifies a ticket with a continuation. When browsing the [same example](examples/demo-vault/README.md) on GitHub, use the Markdown links below each chart.
 
 To validate the example from a checkout, run the helper with [uv](https://docs.astral.sh/uv/). It uses Python 3.11 or newer and PyYAML.
 
@@ -16,7 +16,7 @@ uv run tools/pursuit_graph.py check --vault examples/demo-vault
 
 ## Use your own vault
 
-1. Put an overview `README.md` and your tickets under `pursuits/`. Set `--pursuits-dir` for a different vault-relative folder. Set `--vault` when running outside the vault.
+1. Put the overview `README.md` at the vault root and the tickets in the neighboring `pursuits/` folder. Set `--pursuits-dir` for a different vault-relative ticket folder. Set `--vault` when running outside the vault.
 2. Use the [example ticket](examples/demo-vault/pursuits/DSK%20-%20Desk%20Setup.md) as a template. Quote IDs in YAML so numeric IDs stay text. Put each child in its parent's ID folder. Write both sides of each relationship as slash-separated wikilinks relative to the vault, with no `.md` suffix.
 3. Put the following block in the overview. The helper manages Mermaid blocks immediately preceded by this marker.
 

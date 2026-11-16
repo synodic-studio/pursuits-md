@@ -99,7 +99,7 @@ Notes are human-only capture for typing or dictation. Reread the latest Notes on
 
 ## Diagrams
 
-Use Mermaid `flowchart LR`. Display normally 3–5 horizontal generations. Five is the default maximum unless available space justifies an exception. Every ticket appears in one diagram, except a diagram-transition ticket appearing exactly twice. It appears at the preceding diagram boundary and as the root of the continuation in its own document. Choose useful conceptual breakpoints. The pursuits directory’s `README.md` holds the overview diagram. The helper identifies generated diagrams by `<!-- pursuits-md:graph -->` above the opening fence and regenerates the file links immediately below the diagram.
+Use Mermaid `flowchart LR`. Display normally 3–5 horizontal generations. Five is the default maximum unless available space justifies an exception. Every ticket appears in one diagram, except a diagram-transition ticket appearing exactly twice. It appears at the preceding diagram boundary and as the root of the continuation in its own document. Choose useful conceptual breakpoints. Put the overview diagram in the vault root’s `README.md`, beside the ticket directory. Older vaults can keep their overview in the ticket directory. The helper identifies generated diagrams by `<!-- pursuits-md:graph -->` above the opening fence and regenerates the file links immediately below the diagram.
 
 Put the ticket title above its monospace ID, status dot, and status text. The ID and status share one line, for example `9PV 🔵 Done`. Long titles may wrap. Use gray for Open, yellow for Defining, green for Working, blue for Done, red for Blocked, and purple for Paused. Keep the status text readable on either theme.
 

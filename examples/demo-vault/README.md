@@ -29,8 +29,8 @@ flowchart LR
 
 <!-- pursuits-md:graph-links -->
 
-1. [Desk Setup](DSK%20-%20Desk%20Setup.md)
-2. [Equipment Inventory](DSK/NV7%20-%20Equipment%20Inventory.md)
-3. [Desk Mat](DSK/MAT%20-%20Desk%20Mat.md)
+1. [Desk Setup](pursuits/DSK%20-%20Desk%20Setup.md)
+2. [Equipment Inventory](pursuits/DSK/NV7%20-%20Equipment%20Inventory.md)
+3. [Desk Mat](pursuits/DSK/MAT%20-%20Desk%20Mat.md)
 
 <!-- /pursuits-md:graph-links -->
