@@ -12,6 +12,11 @@ Each title SHALL name one outcome in concise title case. Independently reviewabl
 - **THEN** it allocates an unused ID and creates its file
 - **AND** a later rename preserves the ID and repairs references.
 
+#### Scenario: Sync recreates a renamed ticket
+- **WHEN** the old file reappears with the same ID after a rename
+- **THEN** validation reports the duplicate
+- **AND** the agent reconciles the copies without losing human edits before removing the duplicate.
+
 ### Requirement: Single-parent filesystem tree
 Every non-root ticket SHALL have exactly one parent and MAY have unlimited children and depth. Child files SHALL reside in the parent's ID-only sibling folder. Parent and ordered child fields SHALL use reciprocal Obsidian wikilinks.
 
@@ -27,12 +32,12 @@ Tickets MAY reference other tickets as `related` wikilinks. The system SHALL exc
 - **THEN** the single-parent tree and diagram structure remain unchanged.
 
 ### Requirement: Visual navigation
-Every ticket SHALL appear in a Mermaid diagram, ordinarily exactly once. A transition ticket SHALL appear exactly twice: at the right edge of its preceding diagram and as leftmost root of its continuation diagram in its own document. Every diagram ticket node SHALL link directly to its own document. No child tables SHALL be required.
+Every ticket SHALL appear in a Mermaid diagram, ordinarily exactly once. A transition ticket SHALL appear exactly twice, at the right edge of its preceding diagram and as the root of its continuation in its own document. Each destination ticket SHALL be clickable using a target for the viewer that will display the diagram. A relative Markdown link to each destination SHALL also appear directly below the chart. When rendering charts for GitHub, node links SHALL use full URLs on the selected branch or tag.
 
 #### Scenario: Follow a diagram handoff
 - **WHEN** a user views a diagram with a boundary ticket
 - **THEN** the boundary ticket has a double-sided outline
-- **AND** selecting the ticket opens its document with the continuation diagram immediately after frontmatter.
+- **AND** clicking the boundary ticket opens its document with the continuation diagram after frontmatter.
 
 ### Requirement: Bounded horizontal depth
 Diagrams SHALL use left-to-right layout, normally 3–5 generations, with five as default maximum unless an explicit space-based exception is justified. There SHALL be no sibling or total-tree depth limit.
@@ -73,6 +78,10 @@ A ticket SHALL be `done` only when its own criteria and all children are complet
 - **WHEN** new work is a distinct outcome after a sibling's completion
 - **THEN** a new sibling MAY be created without reopening the completed ticket.
 
+#### Scenario: A required check is still open
+- **WHEN** a remaining check is required to accept the ticket's outcome
+- **THEN** the check is captured in acceptance criteria and the ticket stays unfinished until the check is resolved.
+
 ### Requirement: Human Notes inbox
 Every ticket SHALL include a Notes section with native numbered-list input, initialized with `1.` followed by one ASCII space. Agents SHALL NOT add their own working notes there; agents SHALL write substantive content to flexible main-matter sections.
 
@@ -81,7 +90,7 @@ Every ticket SHALL include a Notes section with native numbered-list input, init
 - **THEN** an empty numbered Notes item is available for input.
 
 ### Requirement: Traceable notes processing
-When agents process Notes, they SHALL record interpretation and resulting edits in the ticket's Change Log and clear only successfully processed notes. Unresolved notes SHALL remain. When no notes remain, agents SHALL leave `1.` followed by one ASCII space.
+When agents process Notes, they SHALL record the substance of the feedback and the resulting edits in the ticket's Change Log and clear only successfully processed notes. Change Log entries SHALL remain understandable after the notes are cleared. Unresolved notes SHALL remain. When no notes remain, agents SHALL leave `1.` followed by one ASCII space.
 
 #### Scenario: Ambiguous note
 - **WHEN** an agent cannot confidently interpret a note
@@ -89,6 +98,8 @@ When agents process Notes, they SHALL record interpretation and resulting edits 
 
 ### Requirement: Referenceable list items
 All unordered-list items SHALL use native Markdown bullets plus unique letter labels across each ticket, extending beyond `z` as `aa`, `ab`, etc. Existing labels SHOULD remain stable across edits. Notes SHALL instead use native numbered lists; ordered procedural lists SHALL use numbers.
+
+Distinct items that readers need to scan or reference SHOULD appear on separate lines in a flat list.
 
 #### Scenario: Insert criterion
 - **WHEN** a new acceptance criterion is inserted
@@ -103,6 +114,8 @@ An agent SHALL be able to reconstruct a ticket's state and resume without chat h
 
 ### Requirement: Reviewable agent work
 Agents SHALL create or identify a ticket when taking on substantial work and record the approach, what was verified, and remaining limits in the ticket before linking to the result. An independently reviewable outcome that supports a larger decision or execution task SHALL be represented by a child ticket. The parent and child SHALL have their own acceptance criteria.
+
+Detailed findings SHOULD use focused vault notes with direct links from the relevant ticket.
 
 #### Scenario: Research informs a later decision
 - **WHEN** an agent compares desk mats before the user chooses one

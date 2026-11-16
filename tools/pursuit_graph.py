@@ -3,15 +3,16 @@
 # requires-python = ">=3.11"
 # dependencies = ["pyyaml>=6,<7"]
 # ///
-"""Validate the pursuit tree and regenerate its linked Obsidian diagrams."""
+"""Validate the pursuit tree and regenerate its diagrams and ticket links."""
 
 import argparse
 from dataclasses import dataclass
 from html import escape
+from os.path import relpath
 from pathlib import Path
 import re
 from tempfile import NamedTemporaryFile
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit, urlunsplit
 
 import yaml
 
@@ -19,8 +20,11 @@ import yaml
 ID = r"[0123456789ABCDEFGHJKMNPQRSTVWXYZ]{3}"
 TICKET_NAME = re.compile(rf"({ID}) - (.+)\.md")
 DIAGRAM_MARKER = "<!-- pursuits-md:graph -->"
+DIAGRAM_LINKS_START = "<!-- pursuits-md:graph-links -->"
+DIAGRAM_LINKS_END = "<!-- /pursuits-md:graph-links -->"
 DIAGRAM = re.compile(
-    rf"^{re.escape(DIAGRAM_MARKER)}\n^```mermaid\n.*?^```\n",
+    rf"^{re.escape(DIAGRAM_MARKER)}\n^```mermaid\n.*?^```\n"
+    rf"(?:\n^{re.escape(DIAGRAM_LINKS_START)}\n.*?^{re.escape(DIAGRAM_LINKS_END)}\n)?",
     re.MULTILINE | re.DOTALL,
 )
 NODE = re.compile(rf"^\s+T({ID})\[", re.MULTILINE)
@@ -121,7 +125,7 @@ def validate_tree(tickets: dict[str, Ticket]) -> dict[str, Ticket]:
 
 def build_diagram(
     start: list[Ticket], links: dict[str, Ticket], continuations: set[str],
-    owner: str | None, max_columns: int
+    owner: str | None, max_columns: int, source: Path, github_base: str | None = None,
 ) -> str:
     nodes, edges = [], []
 
@@ -150,19 +154,33 @@ def build_diagram(
         lines.append(f"        T{ticket.id}[{label}]")
     lines.extend(f"        T{parent} --> T{child}" for parent, child in edges)
     lines.extend(["    end", "    style horizontal fill:none,stroke:none,stroke-width:0px;"])
+    ticket_links = []
     for ticket in nodes:
-        uri = quote(ticket.target, safe="")
-        lines.append(f'    click T{ticket.id} "obsidian://open?file={uri}"')
+        if ticket.id == owner:
+            continue
+        if github_base is None:
+            target = f"obsidian://open?file={quote(ticket.target, safe='')}"
+        else:
+            target = f"{github_base}/{quote(ticket.path.as_posix())}"
+        lines.append(f'    click T{ticket.id} "{target}"')
+        relative_path = Path(relpath(ticket.path, source.parent)).as_posix()
+        title = re.sub(r"([\\\[\]`*_])", r"\\\1", escape(ticket.title, quote=False))
+        ticket_links.append((title, quote(relative_path)))
     for status, (_, color) in PALETTE.items():
         members = [f"T{ticket.id}" for ticket in nodes if ticket.status == status]
         if members:
             lines.append(f"    classDef {status}Ticket stroke:{color},stroke-width:2px;")
             lines.append(f"    class {','.join(members)} {status}Ticket;")
-    return "\n".join([*lines, "```", ""])
+    lines.extend(["```", "", DIAGRAM_LINKS_START, ""])
+    for number, (title, target) in enumerate(ticket_links, 1):
+        lines.append(f"{number}. [{title}]({target})")
+    lines.extend(["", DIAGRAM_LINKS_END, ""])
+    return "\n".join(lines)
 
 
 def render_plan(
-    vault: Path, overview: Path, tickets: dict[str, Ticket], continuations: set[str], max_columns: int
+    vault: Path, overview: Path, tickets: dict[str, Ticket], continuations: set[str],
+    max_columns: int, github_base: str | None = None,
 ) -> dict[Path, tuple[str, str]]:
     links = validate_tree(tickets)
     old_overview = overview.read_text(encoding="utf-8")
@@ -172,21 +190,38 @@ def render_plan(
     order = dict.fromkeys(NODE.findall(old_diagram[0]))
     order.update(dict.fromkeys(tickets))
     roots = [tickets[id] for id in order if id in tickets and tickets[id].parent is None]
+    overview_block = build_diagram(
+        roots, links, continuations, None, max_columns, overview.relative_to(vault), github_base
+    )
     planned = {
         overview: (old_overview, DIAGRAM.sub(
-            lambda _: build_diagram(roots, links, continuations, None, max_columns), old_overview, count=1
+            lambda _: overview_block, old_overview, count=1
         )),
     }
     for id in sorted(continuations):
         ticket = tickets.get(id)
         if ticket is None or not ticket.children:
             raise ValueError(f"Continuation {id} must have a ticket with children")
-        block = build_diagram([ticket], links, continuations, id, max_columns)
+        block = build_diagram([ticket], links, continuations, id, max_columns, ticket.path, github_base)
         open_fence, header, body = ticket.text.split("---\n", 2)
         body = DIAGRAM.sub("", body, count=1)
         updated = f"{open_fence}---\n{header}---\n\n{block}\n{body.lstrip(chr(10))}"
         planned[vault / ticket.path] = ticket.text, updated
     return {path: pair for path, pair in planned.items() if pair[0] != pair[1]}
+
+
+def parse_github_base(value: str) -> str:
+    if value.startswith("/") and not value.startswith("//"):
+        value = f"https://github.com{value}"
+    try:
+        url = urlsplit(value)
+        if url.scheme == "https" and url.hostname and not (
+            url.username or url.password or url.query or url.fragment
+        ) and url.path.strip("/"):
+            return urlunsplit(("https", url.netloc, quote(url.path.rstrip("/"), safe="/%"), "", ""))
+    except ValueError:
+        pass
+    raise argparse.ArgumentTypeError("expected a full GitHub HTTPS URL for the vault")
 
 
 def main() -> None:
@@ -199,6 +234,8 @@ def main() -> None:
                         help="start a continuation diagram at a ticket")
     parser.add_argument("--max-columns", type=int, default=5,
                         help="maximum diagram columns for the current tree (default 5)")
+    parser.add_argument("--github-base", type=parse_github_base, metavar="URL",
+                        help="full GitHub URL to the vault at a specific ref (default: local vault links)")
     args = parser.parse_args()
     if args.max_columns < 1:
         parser.error("--max-columns must be positive")
@@ -211,9 +248,15 @@ def main() -> None:
     try:
         tickets = read_tickets(vault, pursuit_root)
         continuations = {id for id, ticket in tickets.items() if DIAGRAM.search(ticket.text)}
+        overview = vault / "README.md"
+        legacy_overview = pursuit_root / "README.md"
+        if legacy_overview.is_file() and (
+            not overview.is_file() or not DIAGRAM.search(overview.read_text(encoding="utf-8"))
+        ):
+            overview = legacy_overview
         updates = render_plan(
-            vault, pursuit_root / "README.md", tickets,
-            continuations | set(args.continuation), args.max_columns,
+            vault, overview, tickets,
+            continuations | set(args.continuation), args.max_columns, args.github_base,
         )
         if args.command == "check" and updates:
             raise ValueError("Outdated diagrams\n" + "\n".join(str(path) for path in updates))

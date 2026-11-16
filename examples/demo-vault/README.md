@@ -1,5 +1,9 @@
 # Example Pursuits
 
+Set up a desk for writing and video calls.
+
+Click the chart boxes in Obsidian. On GitHub, use the Markdown links below each chart.
+
 <!-- pursuits-md:graph -->
 ```mermaid
 flowchart LR
@@ -23,9 +27,10 @@ flowchart LR
     class TNV7 doneTicket;
 ```
 
-Set up a desk for writing and video calls.
+<!-- pursuits-md:graph-links -->
 
-1. [Desk Setup](DSK%20-%20Desk%20Setup.md)
-2. [Equipment Inventory](DSK/NV7%20-%20Equipment%20Inventory.md)
-3. [Desk Mat](DSK/MAT%20-%20Desk%20Mat.md)
-4. [Mat Fit Check](DSK/MAT/F1T%20-%20Mat%20Fit%20Check.md)
+1. [Desk Setup](pursuits/DSK%20-%20Desk%20Setup.md)
+2. [Equipment Inventory](pursuits/DSK/NV7%20-%20Equipment%20Inventory.md)
+3. [Desk Mat](pursuits/DSK/MAT%20-%20Desk%20Mat.md)
+
+<!-- /pursuits-md:graph-links -->
