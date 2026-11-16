@@ -1,6 +1,6 @@
 # Pursuits MD 0.1.1
 
-A Markdown ticket tree with reciprocal links and generated Obsidian diagrams. Each ticket holds its goal, acceptance criteria, status, and notes. A parent file sits beside the ID-named folder that holds its children.
+A Markdown ticket tree with reciprocal wikilinks and generated Mermaid diagrams. Each ticket holds its goal, acceptance criteria, status, and notes. A parent file sits beside the ID-named folder that holds its children.
 
 The [v0.1 trial notes](docs/v0.1-trial.md) explain the ticket, review, and navigation conventions documented in v0.1.1.
 
@@ -13,7 +13,7 @@ uv run tools/pursuit_graph.py --vault examples/demo-vault check
 uv run tools/pursuit_graph.py --vault examples/demo-vault render
 ```
 
-Open `examples/demo-vault` as a vault in Obsidian and start with the [example overview](examples/demo-vault/pursuits/README.md). The double-sided node opens the ticket containing the continuation diagram. Diagram links use Obsidian URI support from 1.15.1. Use the overview's Markdown links in other readers.
+Start with the [example overview](examples/demo-vault/pursuits/README.md) on GitHub or open `examples/demo-vault` in Obsidian. A double-sided box identifies a ticket with a continuation diagram. Follow the relative Markdown links under each chart to open the tickets.
 
 ## Use your own vault
 
@@ -28,7 +28,7 @@ Open `examples/demo-vault` as a vault in Obsidian and start with the [example ov
    ```
    ~~~
 
-4. Run `render` to update the diagrams and `check` to validate the tree and catch stale diagrams. Use `render --continuation ID` to start a new continuation on a ticket with children. Subsequent runs recognize its marked block.
+4. Run `render` to update the diagrams and ticket links. Run `check` to validate the tree and catch stale diagrams or links. Use `render --continuation ID` to start a new continuation on a ticket with children. Subsequent runs recognize its marked block.
 
 The helper checks filenames, IDs, parent and child links, folder placement, cycles, status, executor, and completion consistency. It updates diagrams. Edit ticket content, properties, and file placement directly in your vault.
 

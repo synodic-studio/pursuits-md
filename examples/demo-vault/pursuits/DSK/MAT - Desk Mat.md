@@ -17,13 +17,17 @@ flowchart LR
         TMAT --> TF1T
     end
     style horizontal fill:none,stroke:none,stroke-width:0px;
-    click TMAT "obsidian://open?file=pursuits%2FDSK%2FMAT%20-%20Desk%20Mat"
-    click TF1T "obsidian://open?file=pursuits%2FDSK%2FMAT%2FF1T%20-%20Mat%20Fit%20Check"
     classDef openTicket stroke:#818994,stroke-width:2px;
     class TMAT openTicket;
     classDef workingTicket stroke:#389364,stroke-width:2px;
     class TF1T workingTicket;
 ```
+
+<!-- pursuits-md:graph-links -->
+
+1. [Mat Fit Check](MAT/F1T%20-%20Mat%20Fit%20Check.md)
+
+<!-- /pursuits-md:graph-links -->
 
 # Desk Mat
 

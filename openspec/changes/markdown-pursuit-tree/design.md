@@ -26,7 +26,7 @@ pursuits/
 1. Read the current file and its links after sync, including the latest Notes and Change Log. Keep the ticket ID and preserve edits that arrived after the work was planned.
 2. Pilot one change before a batch. Obsidian's desktop CLI can rename or move files with automatic internal link updates enabled. Check the new filename and the reciprocal `parent` and `children` properties, `related` links, and inbound links in note bodies. Repair any references that still use the old path. [Obsidian CLI](https://obsidian.md/help/cli)
 3. If sync recreates the old file with the same ID, stop the batch and compare both copies. Preserve human edits from both files, including any newer Notes text, in the surviving ticket. Resolve any uncertainty about conflicting text before removing the duplicate.
-4. Regenerate the diagrams so their explicit ticket URLs target the new path. Run `check` and follow a diagram link to the moved ticket.
+4. Regenerate the diagrams and their relative Markdown links. Run `check` and follow a link below the diagram to the moved ticket.
 
 ## Metadata
 
@@ -99,7 +99,7 @@ Notes are human-only capture for typing or dictation. Reread the latest Notes on
 
 ## Diagrams
 
-Use Obsidian-compatible Mermaid `flowchart LR`, with ticket nodes linking **directly to their own Markdown documents**. Display normally 3–5 horizontal generations; five is the default hard maximum unless available horizontal space justifies an explicit exception. Unlimited siblings and total tree depth. Every ticket appears in one diagram, except a diagram-transition ticket appearing **exactly twice**: rightmost at the preceding diagram boundary and leftmost as root in the continuation diagram contained in its own document. Same ordinary ticket, ID, title, and file in both places. No synthetic connector nodes or child tables. Choose breakpoints at useful, preferably natural conceptual divisions. The pursuits directory’s `README.md` holds the overview diagram. The graph helper identifies generated blocks by the `<!-- pursuits-md:graph -->` marker directly above their opening fence. Every ticket with children does **not** need a diagram. Metadata and filesystem are canonical; diagrams are derived navigational representations, initially maintainable by agents. Canvas is a possible later alternative, not part of v0.1.
+Use Mermaid `flowchart LR`. Display normally 3–5 horizontal generations. Five is the default maximum unless available space justifies an exception. Every ticket appears in one diagram, except a diagram-transition ticket appearing exactly twice. It appears at the preceding diagram boundary and as the root of the continuation in its own document. Choose useful conceptual breakpoints. The pursuits directory’s `README.md` holds the overview diagram. The helper identifies generated diagrams by `<!-- pursuits-md:graph -->` above the opening fence and regenerates the file links immediately below the diagram.
 
 Put the ticket title above its monospace ID, status dot, and status text. The ID and status share one line, for example `9PV 🔵 Done`. Long titles may wrap. Use gray for Open, yellow for Defining, green for Working, blue for Done, red for Blocked, and purple for Paused. Keep the status text readable on either theme.
 
@@ -107,7 +107,7 @@ In the preceding diagram, use Mermaid’s double-sided box (`TABC[["Title"]]`) f
 
 Keep `flowchart LR` and put all the nodes and edges inside an unlabelled `subgraph horizontal[" "]` with `direction LR`. Hide the group border and fill with `style horizontal fill:none,stroke:none,stroke-width:0px;`. This preserves the left-to-right layout when Pele auto-adjusts for narrow screens. [Pele narrow-screen behavior](https://github.com/obsidianmd/pele/blob/main/website/src/content/docs/api.md#narrow-screens)
 
-Use `<br/>` for the line break and `<code>` for the ID. Add a separate Mermaid `click` directive for each node, with `obsidian://open?file=` followed by the percent-encoded vault-relative ticket path. The link opens the note in the active vault. This format uses Obsidian’s URI click support from 1.15.1. [Obsidian 1.15.1 release notes](https://obsidian.md/changelog/2026-11-03-desktop-v1.15.1/)
+Use `<br/>` for the line break and `<code>` for the ID. Below each diagram, provide one relative Markdown link per displayed destination in diagram order. Link paths include the `.md` extension and are relative to the note containing the diagram. The same Markdown links work from a repository view or an Obsidian vault.
 
 ## Agent operations and continuity
 

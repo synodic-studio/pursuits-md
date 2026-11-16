@@ -13,7 +13,7 @@
 - [ ] h. Prevent silent overwrites and report concurrent conflicts.
 
 ## 3. Visualization
-- [ ] i. Establish Obsidian-compatible clickable Mermaid node convention and status labels/colors.
+- [ ] i. Establish Mermaid status labels and colors with relative Markdown links to tickets.
 - [ ] j. Create bounded 3–5-generation LR diagrams with unlimited siblings.
 - [ ] k. Implement shared boundary tickets appearing exactly twice across diagrams.
 - [ ] l. Verify all tickets are represented and test on Obsidian iPad.
