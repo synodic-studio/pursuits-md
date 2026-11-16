@@ -1,0 +1,3 @@
+# Obsidian's editable numbered Notes placeholder ends with one space.
+examples/demo-vault/pursuits/**/*.md whitespace=-blank-at-eol
+openspec/changes/markdown-pursuit-tree/design.md whitespace=-blank-at-eol
